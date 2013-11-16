@@ -107,7 +107,7 @@ int main( void ){
 
 	printf("Game starting...\n");
 
-	screen = CCSS_init(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, "My super game!");
+	screen = CCSS_init(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, "Our maze game!");
 	if(screen==NULL){
 		printf("Something went wrong!\n");
 		exit(-1);
