@@ -22,12 +22,14 @@ typedef  struct{
 	int x,y,w,h;
 }collision_box;
 
-void setUpWalls(int xRooms, int yRooms, collision_box *walls[10])
+collision_box *setUpWalls( void )
 {
     static const char filename[]="walls.txt";
-    int x=1,y=-1,wall=0;
+    int x=1,y=-1,wall_number=0;
+    collision_box *walls;
     collision_box *wall_box;
     wall_box=malloc(sizeof(collision_box));
+    walls=malloc(sizeof(collision_box)*10);
     wall_box->w=60;
     wall_box->h=60;
     //char rooms[maxX][maxY];
@@ -35,22 +37,23 @@ void setUpWalls(int xRooms, int yRooms, collision_box *walls[10])
     if ( file != NULL )
     {
         char line [ 128 ]; /* or other suitable maximum line size */
-        while ( fgets ( line, sizeof(line), file ) != NULL && wall<10) /* read a line */
+        while ( (fgets ( line, sizeof(line), file ) != NULL) && (wall_number<10)) /* read a line */
         {
-            walls[wall]=malloc(sizeof(collision_box));
-            walls[wall]->w=60;
-            walls[wall]->h=60;
-            if(x)
+            if(x==1)
             {
-                wall_box->x=(int)line;
-            }else if(y)
+                sscanf(line,"%d",&(wall_box->x)); //=(int)line;
+            }else if(y==1)
             {
-                wall_box->y=(int)line;
+                sscanf(line,"%d",&(wall_box->y)); //=(int)line;
+                // wall_box->y=(int)line;
+                walls[wall_number]=*wall_box;
+                walls[wall_number].w=60;
+                walls[wall_number].h=60;
+                //printf("Created wall %d with x,y (%d,%d)\n",wall_number,walls[wall_number].x,walls[wall_number].y);
+                wall_number++;
             }
-            walls[wall]=wall_box;
             x=-x;
             y=-y;
-            walls++;
         }
         fclose ( file );
     }
@@ -58,6 +61,7 @@ void setUpWalls(int xRooms, int yRooms, collision_box *walls[10])
     {
         perror ( filename ); /* why didn't the file open? */
     }
+    return walls;
 }
 int collide(collision_box box1,collision_box box2){
 	int currentNum=box1.x;
@@ -111,14 +115,14 @@ extern int main(int argc,char *argv[] ){
 	collision_box emptyBox;
 	emptyBox.w=60;
 	emptyBox.h=60;
-	collision_box walls[10];
+	collision_box *walls;
 	collision_box endBox;
 	endBox.x=300;
 	endBox.y=300;
 	endBox.w=60;
 	endBox.h=60;
 	int i;
-	for (i=0;i<10;i++){
+	/*for (i=0;i<10;i++){
 		walls[i]=emptyBox;
 	}
 	walls[0].x=60;
@@ -141,7 +145,8 @@ extern int main(int argc,char *argv[] ){
 	walls[8].y=240;
 	walls[9].x=300;
 	walls[9].y=240;
-
+    */
+    walls=setUpWalls();
 	printf("Game starting...\n");
 
 	screen = CCSS_init(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, "Our maze game!");
