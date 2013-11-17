@@ -39,7 +39,9 @@ int collide(collision_box box1,collision_box box2){
 	}
 	return 1;
 }
-extern int main(int argc,char *argv[] ){
+
+//int main( void ){
+extern int main( int argc, char *argv[] ){
 	BOOL won = FALSE;
 	BOOL quit = FALSE;
 	// surfaces
@@ -118,14 +120,14 @@ extern int main(int argc,char *argv[] ){
 	// load character and resize it
 	wallImg = CCSS_load_and_resize_image("./resources/img/smiley.png", 0.1, 0.1);
 
-	up = CCSS_load_resize_and_rotate("./resources/img/smiley.png", 0.05, 180);
-	upLeft = CCSS_load_resize_and_rotate("./resources/img/smiley.png", 0.05, 225);
+	up = CCSS_load_resize_and_rotate("./resources/img/smiley.png", 0.05, 0);
+	upLeft = CCSS_load_resize_and_rotate("./resources/img/smiley.png", 0.05, 315);
 	left = CCSS_load_resize_and_rotate("./resources/img/smiley.png", 0.05, 270);
-	downLeft = CCSS_load_resize_and_rotate("./resources/img/smiley.png", 0.05, 315);
-	down = CCSS_load_resize_and_rotate("./resources/img/smiley.png", 0.05, 0);
-	downRight = CCSS_load_resize_and_rotate("./resources/img/smiley.png", 0.05, 45);
+	downLeft = CCSS_load_resize_and_rotate("./resources/img/smiley.png", 0.05, 225);
+	down = CCSS_load_resize_and_rotate("./resources/img/smiley.png", 0.05, 180);
+	downRight = CCSS_load_resize_and_rotate("./resources/img/smiley.png", 0.05, 135);
 	right = CCSS_load_resize_and_rotate("./resources/img/smiley.png", 0.05, 90);
-	upRight = CCSS_load_resize_and_rotate("./resources/img/smiley.png", 0.05, 135);
+	upRight = CCSS_load_resize_and_rotate("./resources/img/smiley.png", 0.05, 45);
 
 	endFlag = CCSS_load_and_resize_image("./resources/img/smiley.png", 0.075,0.075);
 	// load font
@@ -139,36 +141,27 @@ extern int main(int argc,char *argv[] ){
 			}
 		}
 		keystates = SDL_GetKeyState( NULL );
-        if(keystates[SDLK_LEFT]){
+		if(keystates[SDLK_UP]){
+			y-=moveSpeed;
+			character=up;
+			if(keystates[SDLK_LEFT])
+				character=upLeft;
+			if(keystates[SDLK_RIGHT])
+				character=upRight;
+		}
+		else if(keystates[SDLK_DOWN]){
+			y+=moveSpeed;
+			character=down;
+			if(keystates[SDLK_LEFT])
+				character=downLeft;
+			if(keystates[SDLK_RIGHT])
+				character=downRight;
+		}else if(keystates[SDLK_LEFT]){
 			character=left;
 			x-=moveSpeed;
 		}else if(keystates[SDLK_RIGHT]){
 			character=right;
 			x+=moveSpeed;
-		}
-		if(keystates[SDLK_UP]){
-			y-=moveSpeed;
-			character=up;
-			if(keystates[SDLK_LEFT])
-            {
-				character=upLeft;
-            }
-			if(keystates[SDLK_RIGHT])
-            {
-				character=upRight;
-            }
-        }
-		else if(keystates[SDLK_DOWN]){
-			y+=moveSpeed;
-			character=down;
-			if(keystates[SDLK_LEFT])
-            {
-				character=downLeft;
-            }
-			if(keystates[SDLK_RIGHT])
-            {
-				character=downRight;
-            }
 		}
 
 		if(x<0)

@@ -1,9 +1,9 @@
 SRC = ccss.c
 OBJ = $(SRC:.c=.o)
 OUT = ccss.a
-INCLUDES = -I .
+INCLUDES = -I . -I../inc
 CCFLAGS = -g -O2
-CCC = gcc
+CCC = cc
 LDFLAGS = -g
 
 .SUFFIXES: .c
