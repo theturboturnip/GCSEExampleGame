@@ -22,6 +22,43 @@ typedef  struct{
 	int x,y,w,h;
 }collision_box;
 
+void setUpWalls(int xRooms, int yRooms, collision_box *walls[10])
+{
+    static const char filename[]="walls.txt";
+    int x=1,y=-1,wall=0;
+    collision_box *wall_box;
+    wall_box=malloc(sizeof(collision_box));
+    wall_box->w=60;
+    wall_box->h=60;
+    //char rooms[maxX][maxY];
+    FILE *file = fopen ( filename, "rt" );
+    if ( file != NULL )
+    {
+        char line [ 128 ]; /* or other suitable maximum line size */
+        while ( fgets ( line, sizeof(line), file ) != NULL && wall<10) /* read a line */
+        {
+            walls[wall]=malloc(sizeof(collision_box));
+            walls[wall]->w=60;
+            walls[wall]->h=60;
+            if(x)
+            {
+                wall_box->x=(int)line;
+            }else if(y)
+            {
+                wall_box->y=(int)line;
+            }
+            walls[wall]=wall_box;
+            x=-x;
+            y=-y;
+            walls++;
+        }
+        fclose ( file );
+    }
+    else
+    {
+        perror ( filename ); /* why didn't the file open? */
+    }
+}
 int collide(collision_box box1,collision_box box2){
 	int currentNum=box1.x;
 	while (currentNum>box2.x+box2.w||currentNum<box2.x){
