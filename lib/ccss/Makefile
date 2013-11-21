@@ -2,10 +2,14 @@ SRC = ccss.c
 OBJ = $(SRC:.c=.o)
 OUT = ccss.a
 INCLUDES = -I .
-# -I../inc
 CCFLAGS = -g -O2
 CCC = cc
 LDFLAGS = -g
+UNAME := $(shell uname -s)
+
+ifeq ($(UNAME),Darwin)
+INCLUDES = -I. -I../inc
+endif
 
 .SUFFIXES: .c
 
