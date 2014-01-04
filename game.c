@@ -19,7 +19,7 @@
 #define WHITE		{255, 255, 255}
 #define moveSpeed               3
 
-#define NUM_OF_WALLS 38
+#define NUM_OF_WALLS 39
 typedef  struct{
 	int x,y,w,h;
 }collision_box;
@@ -123,12 +123,12 @@ collision_box *setUpWalls( void )
     for (i=0;i<8;i++){
         wall_box->x=-60;
         wall_box->y=(i-1)*60;
-        walls[i+25]=*wall_box;        
+        walls[i+24]=*wall_box;        
     }
     for (i=0;i<8;i++){
         wall_box->y=-60;
         wall_box->x=(i-1)*60;
-        walls[i+32]=*wall_box;        
+        walls[i+31]=*wall_box;        
     }
     return walls;
 }
