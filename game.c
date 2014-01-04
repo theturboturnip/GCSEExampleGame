@@ -50,7 +50,6 @@ int collideFromPointer(collision_box box1, collision_box *box2){
     return collide(box1,box3);
 }
 int randomNumber(){
-    //sleep(1);
     return (rand()%5)*60;
 }
 collision_box *setUpItem( collision_box *walls )
@@ -80,7 +79,6 @@ collision_box *setUpWalls( void )
     walls=malloc(sizeof(collision_box)*NUM_OF_WALLS);
     wall_box->w=60;
     wall_box->h=60;
-    //char rooms[maxX][maxY];
     FILE *file = fopen ( filename, "rt" );
     if ( file != NULL )
     {
@@ -92,12 +90,10 @@ collision_box *setUpWalls( void )
                 sscanf(line,"%d",&(wall_box->x)); //=(int)line;
             }else if(y==1)
             {
-                sscanf(line,"%d",&(wall_box->y)); //=(int)line;
-                // wall_box->y=(int)line;
+                sscanf(line,"%d",&(wall_box->y));
                 walls[wall_number]=*wall_box;
                 walls[wall_number].w=60;
                 walls[wall_number].h=60;
-                //printf("Created wall %d with x,y (%d,%d)\n",wall_number,walls[wall_number].x,walls[wall_number].y);
                 wall_number++;
             }
             x=-x;
@@ -107,7 +103,7 @@ collision_box *setUpWalls( void )
     }
     else
     {
-        perror ( filename ); /* why didn't the file open? */
+        perror ( filename ); 
     }
     for (i=0;i<8;i++){
         wall_box->x=360;
@@ -144,7 +140,6 @@ int *getScores(void){
         while ( (fgets ( line, sizeof(line), file ) != NULL) && (i<5)) /* read a line */
         {
             score=atoi(line);
-            //printf("Score;%d\n",score);
             scores[i]=score;
             i++;    
         }
@@ -226,30 +221,6 @@ extern int main(int argc,char *argv[] ){
 	endBox.y=300;
 	endBox.w=60;
 	endBox.h=60;
-	/*for (i=0;i<10;i++){
-		walls[i]=emptyBox;
-	}
-	walls[0].x=60;
-	walls[0].y=0;
-	walls[1].x=120;
-	walls[1].y=0;
-	walls[2].x=120;
-	walls[2].y=60;
-	walls[3].x=240;
-	walls[3].y=60;
-	walls[4].x=60;
-	walls[4].y=120;
-	walls[5].x=240;
-	walls[5].y=180;
-	walls[6].x=300;
-	walls[6].y=180;
-	walls[7].x=60;
-	walls[7].y=240;
-	walls[8].x=120;
-	walls[8].y=240;
-	walls[9].x=300;
-	walls[9].y=240;
-    */
     walls=setUpWalls();
     collision_box *points_box;
     points_box=setUpItem(walls);
@@ -261,7 +232,7 @@ extern int main(int argc,char *argv[] ){
 	}
 
 	// Load background image
-	background = CCSS_load_image("./resources/img/tux.png");
+	background = CCSS_load_image("./resources/img/background.png");
 	// load character and resize it
 	itemImg = CCSS_load_and_resize_image("./resources/img/cherry.png", 1, 1);
 
@@ -321,21 +292,6 @@ extern int main(int argc,char *argv[] ){
             }
 		}
 
-		/*if(x<0)
-			x=0;
-		else if(x+Pbox.w>SCREEN_WIDTH)
-			x=SCREEN_WIDTH-Pbox.w;
-		if(y<0)
-			y=0;
-		else if(y+Pbox.h>SCREEN_HEIGHT)
-			y=SCREEN_HEIGHT-Pbox.h;
-	
-		/*if (x>=wall1.x&&x<=wall1.x+60&&y==wall1.y+60)
-		{
-			//Character is below Wall
-			y++;
-		}*/
-
 		Pbox.x=x;
 		Pbox.y=y; 
 		for (i=0;i<NUM_OF_WALLS;i++){
@@ -363,8 +319,8 @@ extern int main(int argc,char *argv[] ){
 		}
 		CCSS_print(440,0, logoFont, text_color, screen, "MAZE");
 		CCSS_print(445,30, font, text_color, screen, "The Game");
-		CCSS_print(435,80, font, text_color, screen, "Score:");
-		CCSS_print(450,100, font, text_color, screen, "%d",points);
+		CCSS_print(465,80, font, text_color, screen, "Score:");
+		CCSS_print(470,100, font, text_color, screen, "%d",points);
 
 		CCSS_print(435,120, font, text_color, screen, "Time bonus:");
 		CCSS_print(465,140, font, text_color, screen, "%d",highestTicks-numOfTicks);
@@ -376,12 +332,12 @@ extern int main(int argc,char *argv[] ){
 		}
 		if (collide(Pbox, endBox)==1){
 			CCSS_apply_surface(0, 0, background, screen);
-			CCSS_print(100, 0, font, text_color, screen, "YOU WIN!!!");
+			CCSS_print(225, 0, font, text_color, screen, "YOU WIN!!!");
 			time=highestTicks-numOfTicks;
             score=points+time;
-			CCSS_print(100,50, font, text_color, screen, "Points: %d", points);
-			CCSS_print(50,100, font, text_color, screen, "Time Bonus: %d", time);
-			CCSS_print(25,200, font, text_color, screen, "Total Score: %d", score);
+			CCSS_print(225,50, font, text_color, screen, "Points: %d", points);
+			CCSS_print(200,100, font, text_color, screen, "Time Bonus: %d", time);
+			CCSS_print(180,200, font, text_color, screen, "Total Score: %d", score);
 			won=TRUE;
 			quit=TRUE;
 		}
@@ -393,9 +349,8 @@ extern int main(int argc,char *argv[] ){
 		CCSS_apply_surface(0, 0, background, screen);
         setScores(score);
         int *scores=getScores();
-        //printf("1:%d\n2:%d\n3:%d\n4:%d\n5:%d\n",scores[0],scores[1],scores[2],scores[3],scores[4]);
-        CCSS_print(100,0, font,text_color,screen,"Your score: %d",score);
-        int scorex=100;
+        CCSS_print(200,0, font,text_color,screen,"Your score: %d",score);
+        int scorex=180;
         for(i=0;i<=4;i++){
             CCSS_print(scorex,100+((i-1)*50),font,text_color,screen,"%d:%d",i+1,scores[i]);
         }
