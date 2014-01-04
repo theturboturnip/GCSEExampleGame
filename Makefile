@@ -1,5 +1,5 @@
 
-
+pi: game.pi
 game.pi: game.c
 	@echo "\nBuilding for Raspberry PI - if on OSX, use 'make osx' instead\n"
 	cc -g -o game.pi game.c lib/ccss/ccss.o -L/usr/lib/arm-linux-gnueabihf -lSDL -lSDL_image -lSDL_ttf -lSDL_gfx -lSDLmain
