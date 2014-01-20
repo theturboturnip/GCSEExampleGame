@@ -252,6 +252,7 @@ extern int main(int argc,char *argv[] ){
 	font = TTF_OpenFont( "./resources/font/creaminal.ttf", 14 );	
     logoFont = TTF_OpenFont( "./resources/font/creaminal.ttf", 30 );
 	while(quit==FALSE){
+        //1. Get Input
         character=down;
 		starttick = SDL_GetTicks();
 		while(SDL_PollEvent( &event )){ // while there is event to handle
@@ -260,6 +261,7 @@ extern int main(int argc,char *argv[] ){
 			}
 		}
 		keystates = SDL_GetKeyState( NULL );
+        //2+3. Move and rotate character
         if(keystates[SDLK_LEFT]){
 			character=left;
 			x-=moveSpeed;
@@ -294,6 +296,7 @@ extern int main(int argc,char *argv[] ){
 
 		Pbox.x=x;
 		Pbox.y=y; 
+        //4. If colliding with walls, move to start
 		for (i=0;i<NUM_OF_WALLS;i++){
 			if (collide(Pbox, walls[i])==1){
 				x=spawnX;
@@ -303,10 +306,12 @@ extern int main(int argc,char *argv[] ){
 			    points_box=setUpItem(walls);
 			}
 		}
+        //5. If colliding with cherries, get 500 points & move cherry
         if(collideFromPointer(Pbox,points_box)==1){
             points+=500;
             points_box=setUpItem(walls);
 		}
+        //6. Draw everything
 		// Apply background to screen
 		CCSS_apply_surface(0, 0, background, screen);		
 		// Apply our character
@@ -330,6 +335,7 @@ extern int main(int argc,char *argv[] ){
 		if(ticks < 1000 / FRAMES_PER_SECOND){
 			SDL_Delay((1000/FRAMES_PER_SECOND)-ticks);
 		}
+        //7. If colliding with flags, victory=true
 		if (collide(Pbox, endBox)==1){
 			CCSS_apply_surface(0, 0, background, screen);
 			CCSS_print(225, 0, font, text_color, screen, "YOU WIN!!!");
@@ -343,6 +349,7 @@ extern int main(int argc,char *argv[] ){
 		}
 		numOfTicks+=9;
 	}
+    //8. If victory=true, show scores and then close game
 	if(won==TRUE){
 		SDL_Flip( screen );
 		SDL_Delay(3000);
