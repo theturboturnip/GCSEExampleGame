@@ -198,6 +198,7 @@ extern int main(int argc,char *argv[] ){
 	SDL_Surface* right = NULL;
 	SDL_Surface* upRight = NULL;
 
+    SDL_Surface* playerImgs[360];
 	SDL_Surface* itemImg = NULL;
 
 	SDL_Event event;
@@ -206,7 +207,7 @@ extern int main(int argc,char *argv[] ){
     TTF_Font* logoFont=NULL;
 	SDL_Color text_color = WHITE;
 	// game data
-	int x=15,y=15, numOfTicks=0, highestTicks=50000 , score,time,points=0,i,spawnX=x,spawnY=y;
+	int x=15,y=15, numOfTicks=0, highestTicks=50000 , score,time,points=0,i,spawnX=x,spawnY=y,angle=0;
 	unsigned char *keystates;
 	int starttick, ticks;
 	collision_box Pbox;
@@ -238,14 +239,14 @@ extern int main(int argc,char *argv[] ){
 
 	wallImg = CCSS_load_and_resize_image("./resources/img/wall.png", 0.2, 0.2);
 
-	up = CCSS_load_resize_and_rotate("./resources/img/smiley.png", 0.05, 180);
-	upLeft = CCSS_load_resize_and_rotate("./resources/img/smiley.png", 0.05, 225);
-	left = CCSS_load_resize_and_rotate("./resources/img/smiley.png", 0.05, 270);
-	downLeft = CCSS_load_resize_and_rotate("./resources/img/smiley.png", 0.05, 315);
-	down = CCSS_load_resize_and_rotate("./resources/img/smiley.png", 0.05, 0);
-	downRight = CCSS_load_resize_and_rotate("./resources/img/smiley.png", 0.05, 45);
-	right = CCSS_load_resize_and_rotate("./resources/img/smiley.png", 0.05, 90);
-	upRight = CCSS_load_resize_and_rotate("./resources/img/smiley.png", 0.05, 135);
+	playerImgs[180] = CCSS_load_resize_and_rotate("./resources/img/smiley.png", 0.05, 180);
+	playerImgs[225] = CCSS_load_resize_and_rotate("./resources/img/smiley.png", 0.05, 225);
+	playerImgs[270] = CCSS_load_resize_and_rotate("./resources/img/smiley.png", 0.05, 270);
+    playerImgs[315] = CCSS_load_resize_and_rotate("./resources/img/smiley.png", 0.05, 315);
+	playerImgs[0]   = CCSS_load_resize_and_rotate("./resources/img/smiley.png", 0.05, 0);
+	playerImgs[45]  = CCSS_load_resize_and_rotate("./resources/img/smiley.png", 0.05, 45);
+	playerImgs[90]  = CCSS_load_resize_and_rotate("./resources/img/smiley.png", 0.05, 90);
+	playerImgs[135] = CCSS_load_resize_and_rotate("./resources/img/smiley.png", 0.05, 135);
 
 	endFlag = CCSS_load_and_resize_image("./resources/img/flag.png", 0.1,0.1);
 	// load font
@@ -253,7 +254,7 @@ extern int main(int argc,char *argv[] ){
     logoFont = TTF_OpenFont( "./resources/font/creaminal.ttf", 30 );
 	while(quit==FALSE){
         //1. Get Input
-        character=down;
+        angle=0;
 		starttick = SDL_GetTicks();
 		while(SDL_PollEvent( &event )){ // while there is event to handle
 			if(event.type == SDL_QUIT){
@@ -263,37 +264,38 @@ extern int main(int argc,char *argv[] ){
 		keystates = SDL_GetKeyState( NULL );
         //2+3. Move and rotate character
         if(keystates[SDLK_LEFT]){
-			character=left;
+            angle+=270;
 			x-=moveSpeed;
-		}else if(keystates[SDLK_RIGHT]){
-			character=right;
+        }else if(keystates[SDLK_RIGHT]){
+            angle+=90;
 			x+=moveSpeed;
 		}
 		if(keystates[SDLK_UP]){
 			y-=moveSpeed;
-			character=up;
-			if(keystates[SDLK_LEFT])
-            {
-				character=upLeft;
-            }
-			if(keystates[SDLK_RIGHT])
-            {
-				character=upRight;
+			if (angle>180){
+                angle-=45;
+            }else if (angle<180&&angle!=0){
+                angle+=45;
+            }else{
+                angle=180;
             }
         }
 		else if(keystates[SDLK_DOWN]){
 			y+=moveSpeed;
-			character=down;
-			if(keystates[SDLK_LEFT])
-            {
-				character=downLeft;
-            }
-			if(keystates[SDLK_RIGHT])
-            {
-				character=downRight;
+            if (angle<180&&angle!=0){
+                angle-=45;
+            }else if (angle>180){
+                angle+=45;
+            }else{
+                angle=0;
             }
 		}
-
+        if (angle<0){
+            angle=0;
+        }else if(angle>360){
+            angle-=360;
+        }
+        character=playerImgs[angle];
 		Pbox.x=x;
 		Pbox.y=y; 
         //4. If colliding with walls, move to start
